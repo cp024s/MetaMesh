@@ -1,0 +1,188 @@
+# 📌 Notes:
+
+# This .gitignore is aggressive to ensure you don’t accidentally commit heavy simulation dumps, build files, or tool-generated data.
+# Adjust if you're using other tools like Yosys, NextPNR, OpenLane, etc.
+# The directories like /reports/ and /sim/ often contain large, unnecessary, or tool-generated data — ignore unless you intentionally want to version some.
+# Keep things like README.md and Makefile in version control.
+# If you version test outputs for regression checking or waveform comparisons, selectively include those using ! rules.
+
+
+#------------------------------------
+# General
+#------------------------------------
+*.log
+*.tmp
+*.swp
+*.bak
+*.orig
+*~
+.DS_Store
+Thumbs.db
+*.swo
+*.pyc
+__pycache__/
+.cache/
+*.out
+*.err
+
+#------------------------------------
+# Simulation Outputs
+#------------------------------------
+simv*
+*.vcd
+*.fsdb
+*.vpd
+*.wlf
+*.trn
+*.ucdb
+*.hvl
+*.qdb
+*.log
+*.key
+*.shm/
+*.vstf
+*.svf
+*.dsn
+
+# ModelSim/Questa
+transcript
+vsim.wlf
+modelsim.ini
+questa.ini
+work/
+vsim.saif
+*.wlf.*
+*.mti
+
+# VCS
+csrc/
+simv.daidir/
+simv
+simv.*
+*.simv*
+ucli.key
+vc_hdrs.h
+vcs.key
+*.vdb
+*.vcs.*
+*.rc
+*.vlt
+
+# Xcelium/NCSim
+INCA_libs/
+*.history
+*.log
+*.cmd.tcl
+
+# Synopsys Design Compiler / DFT / ICC
+*.ddc
+*.svf
+*.mr
+*.rep
+*.syn
+*.chk
+*.sdf
+*.vcd
+*.fsdb
+*.db
+*.sdc
+*.tgz
+
+# Vivado
+*.jou
+*.log
+*.str
+*.pb
+*.xml
+*.bit
+*.bin
+*.mmi
+*.xpr
+*.xsim/
+*.runs/
+*.cache/
+*.hw/
+*.ip_user_files/
+*.sim/
+*.srcs/
+*.webtalk/
+*.vivado
+
+# Cadence Genus/Innovus
+*.log
+*.cmd
+*.txt
+*.err
+*.out
+*.svf
+*.report
+*.summary
+*.temp
+*.gz
+*.tcl
+
+# Linting tools
+*.lint
+*.rpt
+
+# Waveform viewers
+*.gtkw
+*.vcd
+*.lxt*
+*.fst
+
+# Coverage files
+*.cov
+*.coverage
+*.gcda
+*.gcno
+*.gcov
+*.ucdb
+*.tcl.coverage
+
+# Docker
+*.tar
+*.img
+*.pid
+*.sock
+docker-compose.override.yml
+
+# Python
+.env
+.venv/
+venv/
+pip-wheel-metadata/
+dist/
+build/
+*.egg-info/
+
+# Jupyter notebooks (if used for reports or automation)
+.ipynb_checkpoints/
+
+# Reports and Generated Docs
+/reports/
+/reports/*/
+/docs/build/
+/docs/_build/
+/htmlcov/
+
+# GitHub-specific
+!.github/
+!.github/workflows/
+!.github/issue_templates/
+
+# IDE & Editor Configs
+.vscode/
+.idea/
+*.code-workspace
+
+# User files (optional)
+*.bak
+*.backup
+*.old
+*.log
+
+# Generated files from setup script (optional cleanup)
+/reports/simulation_logs/
+/reports/waveform_outputs/
+/reports/coverage_reports/
