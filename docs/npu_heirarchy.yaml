@@ -1,0 +1,37 @@
+# Some modules need revision and some sub modules are needed to be added too !
+
+NPU_TOP
+├── Host_Interface
+│   ├── AXI/APB Slave (Config registers)
+│   ├── Interrupt Controller
+│   └── Job Queue
+│
+├── Compute_Engine
+│   ├── MAC_Array
+│   │   └── Processing Elements (PEs → multiplier + adder + regs)
+│   ├── Vector_Units (elementwise ops)
+│   ├── Activation_Unit (ReLU/LUT/CORDIC)
+│   ├── Pooling_Unit
+│   └── Quantization_Unit
+│
+├── Memory_Subsystem
+│   ├── Weight_Buffer (SRAM banks)
+│   ├── Activation_Buffer (SRAM banks)
+│   ├── DMA_Engine
+│   ├── Address_Generators
+│   └── Prefetch/Writeback
+│
+├── Control_Unit
+│   ├── Instruction_Decoder / FSM
+│   ├── Scheduler
+│   └── Error_Handler
+│
+├── Interfaces
+│   ├── AXI Master (for DRAM)
+│   ├── AXI-Lite/APB Slave (for CPU control)
+│   └── Cache/Coherency Interface (optional)
+│
+└── Debug_Unit
+    ├── Performance Counters
+    ├── Trace Buffers
+    └── JTAG/Scan Chains
