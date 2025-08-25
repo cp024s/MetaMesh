@@ -1,6 +1,3 @@
-
-# 0) Big picture (box view)
-
 ```
 NPU_TOP
 ├─ Host_Interface
