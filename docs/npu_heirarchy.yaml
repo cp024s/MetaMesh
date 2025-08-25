@@ -1,37 +1,80 @@
-# Some modules need revision and some sub modules are needed to be added too !
-
 NPU_TOP
 ├── Host_Interface
-│   ├── AXI/APB Slave (Config registers)
-│   ├── Interrupt Controller
-│   └── Job Queue
+│   ├── AXI/APB_Slave      (Config + Status Registers)
+│   ├── Interrupt_Controller
+│   └── Job_Queue
 │
 ├── Compute_Engine
-│   ├── MAC_Array
-│   │   └── Processing Elements (PEs → multiplier + adder + regs)
-│   ├── Vector_Units (elementwise ops)
-│   ├── Activation_Unit (ReLU/LUT/CORDIC)
+│   ├── Systolic_Array_Engine
+│   │   ├── Systolic_Array_Controller (wavefront FSM)
+│   │   ├── Systolic_PE_Array
+│   │   │   ├── Processing_Element (PE)
+│   │   │   │   ├── Multiplier
+│   │   │   │   ├── Adder
+│   │   │   │   └── Local_Reg/Buffer
+│   │   ├── Input_Stream_Buffer
+│   │   ├── Output_Collector
+│   │   └── Dataflow_Scheduler
+│   │
+│   ├── MAC_Array_Engine
+│   │   ├── MAC_Array_Controller
+│   │   ├── MAC_PE_Array
+│   │   │   ├── Processing_Element (PE)
+│   │   │   │   ├── Multiplier
+│   │   │   │   ├── Adder
+│   │   │   │   └── Local_Reg
+│   │   ├── Input_Distributor
+│   │   ├── Output_Accumulator
+│   │   └── Dataflow_Controller
+│   │
+│   ├── Vector_Units
+│   │   ├── Elementwise_Adder
+│   │   ├── Elementwise_Multiplier
+│   │   └── Normalization_Unit
+│   │
+│   ├── Activation_Unit
+│   │   ├── ReLU
+│   │   ├── Sigmoid/Tanh (LUT or CORDIC)
+│   │   ├── Softmax_Unit
+│   │   └── Custom_Activation (extensible)
+│   │
 │   ├── Pooling_Unit
+│   │   ├── Max_Pooling
+│   │   ├── Avg_Pooling
+│   │   └── Global_Pooling
+│   │
 │   └── Quantization_Unit
+│       ├── FP16_to_INT8
+│       ├── INT8_to_FP16
+│       └── Dynamic_Scaler
 │
 ├── Memory_Subsystem
-│   ├── Weight_Buffer (SRAM banks)
-│   ├── Activation_Buffer (SRAM banks)
+│   ├── Weight_Buffer (SRAM Banks)
+│   ├── Activation_Buffer (SRAM Banks)
 │   ├── DMA_Engine
+│   │   ├── AXI_Master
+│   │   ├── Read_Channel
+│   │   └── Write_Channel
 │   ├── Address_Generators
-│   └── Prefetch/Writeback
+│   │   ├── Stride_Handler
+│   │   ├── Offset_Calculator
+│   │   └── Burst_Controller
+│   └── Prefetch_Writeback
 │
 ├── Control_Unit
-│   ├── Instruction_Decoder / FSM
+│   ├── Instruction_Decoder
 │   ├── Scheduler
+│   │   ├── Engine_Selector (MAC vs Systolic)
+│   │   ├── Job_Dispatcher
+│   │   └── Dependency_Checker
 │   └── Error_Handler
 │
 ├── Interfaces
-│   ├── AXI Master (for DRAM)
-│   ├── AXI-Lite/APB Slave (for CPU control)
-│   └── Cache/Coherency Interface (optional)
+│   ├── AXI_Master_IF   (for DRAM access)
+│   ├── AXI-Lite/APB_IF (CPU control)
+│   └── Cache_Coherency_IF (optional)
 │
 └── Debug_Unit
-    ├── Performance Counters
-    ├── Trace Buffers
-    └── JTAG/Scan Chains
+    ├── Performance_Counters
+    ├── Trace_Buffers
+    └── JTAG/Scan_Chain
