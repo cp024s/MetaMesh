@@ -1,0 +1,51 @@
+scripts/
+├── design/
+│   ├── lint/                  # Lint configs + scripts
+│   ├── elab/                  # Elaboration + hierarchy checks
+│   └── sanity/                # Reset checks, unused nets, CDC etc.
+│
+├── sim/
+│   ├── unit/                  # Unit test run scripts
+│   ├── system/                # Full-chip/system sim scripts
+│   ├── regression/            # Regression manager
+│   └── coverage/              # Coverage collection
+│
+├── formal/
+│   ├── properties/            # Assertions/properties library
+│   ├── equivalence/           # RTL vs Synth check
+│   └── proofs/                # Run/collect proofs
+│
+├── synth/
+│   ├── constraints/           # Timing, area, power constraints
+│   ├── yosys/                 # Yosys synthesis flow
+│   └── reports/               # Report parsing scripts
+│
+├── dft/
+│   ├── scan_insertion/         # Scan insertion configs
+│   ├── atpg/                  # ATPG run scripts
+│   └── coverage/              # Fault coverage extraction
+│
+├── pnr/
+│   ├── floorplan/             # Die/core floorplan configs
+│   ├── placement/             # Placement rules
+│   ├── cts/                   # Clock tree synthesis configs
+│   ├── routing/               # Detailed routing
+│   ├── signoff/               # Antenna, IR drop, EM checks
+│   └── reports/               # Report parsers
+│
+├── sta/
+│   ├── setup/                 # Setup timing checks
+│   ├── hold/                  # Hold checks
+│   ├── multi_corner/          # Multi-corner STA
+│   └── reports/               # Timing report extractors
+│
+├── drc_lvs/
+│   ├── drc/                   # Magic/Klayout configs
+│   ├── lvs/                   # LVS run configs
+│   └── reports/               # Consolidated logs
+│
+└── utils/
+    ├── env/                   # Env setup files
+    ├── cleanup/               # Clean workspace scripts
+    ├── log_tools/             # Log/grep parsers
+    └── wrappers/              # Tool wrappers for CI
