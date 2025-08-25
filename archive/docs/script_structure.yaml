@@ -1,51 +1,147 @@
-scripts/
-├── design/
-│   ├── lint/                  # Lint configs + scripts
-│   ├── elab/                  # Elaboration + hierarchy checks
-│   └── sanity/                # Reset checks, unused nets, CDC etc.
-│
-├── sim/
-│   ├── unit/                  # Unit test run scripts
-│   ├── system/                # Full-chip/system sim scripts
-│   ├── regression/            # Regression manager
-│   └── coverage/              # Coverage collection
-│
-├── formal/
-│   ├── properties/            # Assertions/properties library
-│   ├── equivalence/           # RTL vs Synth check
-│   └── proofs/                # Run/collect proofs
-│
-├── synth/
-│   ├── constraints/           # Timing, area, power constraints
-│   ├── yosys/                 # Yosys synthesis flow
-│   └── reports/               # Report parsing scripts
-│
-├── dft/
-│   ├── scan_insertion/         # Scan insertion configs
-│   ├── atpg/                  # ATPG run scripts
-│   └── coverage/              # Fault coverage extraction
-│
-├── pnr/
-│   ├── floorplan/             # Die/core floorplan configs
-│   ├── placement/             # Placement rules
-│   ├── cts/                   # Clock tree synthesis configs
-│   ├── routing/               # Detailed routing
-│   ├── signoff/               # Antenna, IR drop, EM checks
-│   └── reports/               # Report parsers
-│
-├── sta/
-│   ├── setup/                 # Setup timing checks
-│   ├── hold/                  # Hold checks
-│   ├── multi_corner/          # Multi-corner STA
-│   └── reports/               # Timing report extractors
-│
-├── drc_lvs/
-│   ├── drc/                   # Magic/Klayout configs
-│   ├── lvs/                   # LVS run configs
-│   └── reports/               # Consolidated logs
-│
-└── utils/
-    ├── env/                   # Env setup files
-    ├── cleanup/               # Clean workspace scripts
-    ├── log_tools/             # Log/grep parsers
-    └── wrappers/              # Tool wrappers for CI
+scripts/design/
+├── lint/
+│   ├── lint_config.ys        # Yosys lint rules
+│   ├── run_lint.sh           # Runs yosys lint + logs results
+│   ├── lint_report.log       # Output lint violations
+│   └── README.md             # Guidelines for lint checks
+├── elab/
+│   ├── elab_config.json      # Defines top module, defines, incdirs
+│   ├── run_elab.sh           # Runs yosys/iverilog hierarchy check
+│   └── elab_report.log       # Flattened hierarchy & issues
+└── sanity/
+    ├── reset_check.sv        # Simple reset assertions
+    ├── cdc_check.sdc         # CDC timing definitions
+    ├── run_sanity.sh         # Launches mini-sim/formal sanity checks
+    └── sanity_report.log
+
+scripts/sim/
+├── unit/
+│   ├── filelist_unit.f       # RTL + TB filelist
+│   ├── run_unit_tb.sh        # Run unit-level sims
+│   └── logs/                 # All sim logs
+├── system/
+│   ├── filelist_system.f
+│   ├── run_system_tb.sh
+│   └── logs/
+├── regression/
+│   ├── regression_list.txt   # Test IDs
+│   ├── run_regression.py     # Python regression manager
+│   ├── merge_logs.sh
+│   └── reports/
+│       └── regression_summary.csv
+└── coverage/
+    ├── collect_coverage.sh
+    ├── merge_coverage.sh
+    ├── coverage_report.html
+    └── coverage.ucdb         # Coverage DBs
+
+
+scripts/formal/
+├── properties/
+│   ├── assertions.sv         # Common SVA assertions
+│   ├── reset_props.sva       # Reset-related properties
+│   └── handshake_props.sva   # Protocol checks
+├── equivalence/
+│   ├── equiv_config.ys       # RTL vs Netlist setup
+│   ├── run_equiv.sh
+│   └── equiv_report.log
+└── proofs/
+    ├── run_proofs.sh         # Symbiyosys bounded model check
+    ├── proof_summary.log
+    └── waveforms/            # VCDs for counterexamples
+
+
+scripts/synth/
+├── constraints/
+│   ├── timing.sdc
+│   ├── power_intent.upf
+│   └── area_constraints.tcl
+├── yosys/
+│   ├── synth.ys              # Yosys synthesis script
+│   ├── techmap.v             # Tech mapping rules
+│   └── cell_lib.lib          # Liberty file
+└── reports/
+    ├── synth_report.rpt
+    ├── area_util.rpt
+    └── timing_summary.rpt
+
+
+scripts/dft/
+├── scan_insertion/
+│   ├── insert_scan.tcl
+│   ├── scan_config.json
+│   └── scan_log.log
+├── atpg/
+│   ├── run_atpg.sh
+│   ├── atpg_patterns.vec
+│   └── atpg_log.log
+└── coverage/
+    ├── fault_coverage.rpt
+    └── stuck_at_summary.csv
+
+
+scripts/pnr/
+├── floorplan/
+│   ├── floorplan.tcl
+│   └── io_constraints.csv
+├── placement/
+│   └── place.tcl
+├── cts/
+│   └── cts.tcl
+├── routing/
+│   └── route.tcl
+├── signoff/
+│   ├── antenna_check.tcl
+│   └── ir_drop_check.tcl
+└── reports/
+    ├── area_report.rpt
+    ├── power_report.rpt
+    └── timing_summary.rpt
+
+
+scripts/sta/
+├── setup/
+│   └── run_sta_setup.tcl
+├── hold/
+│   └── run_sta_hold.tcl
+├── multi_corner/
+│   └── run_mc_sta.tcl
+└── reports/
+    ├── sta_setup.rpt
+    ├── sta_hold.rpt
+    └── sta_mc_summary.rpt
+
+
+scripts/drc_lvs/
+├── drc/
+│   ├── run_drc.sh
+│   └── drc_report.log
+├── lvs/
+│   ├── run_lvs.sh
+│   └── lvs_report.log
+└── reports/
+    └── summary.log
+
+
+scripts/utils/
+├── env/
+│   ├── setup_env.sh          # Set PATH, vars
+│   └── tool_versions.txt     # Freeze versions
+├── cleanup/
+│   ├── clean_all.sh
+│   ├── clean_logs.sh
+│   └── clean_reports.sh
+├── log_tools/
+│   ├── grep_errors.sh
+│   └── summarize_warnings.sh
+└── wrappers/
+    └── run_flow.sh           # Full flow launcher
+
+
+scripts/ci_cd/
+├── local/
+│   └── run_local_flow.sh
+├── github/
+│   └── github_actions.yml
+└── pipelines/
+    └── jenkins_pipeline.groovy
