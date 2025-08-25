@@ -1,0 +1,85 @@
+NPU_TOP.sv
+├── Host_Interface/
+│   ├── AXI/APB_Slave.sv      (Config + Status Registers)
+│   ├── Interrupt_Controller.sv
+│   └── Job_Queue.sv
+│
+├── Compute_Engine/
+│   ├── Systolic_Array_Engine/
+│   │   ├── Systolic_Array_Controller.sv (wavefront FSM)
+│   │   ├── Systolic_PE_Array.sv
+│   │   │   ├── Processing_Element (PE)/
+|   |   |   |   ├── PE.sv
+│   │   │   │   ├── Multiplier.sv
+│   │   │   │   ├── Adder.sv
+│   │   │   │   └── Local_Reg/Buffer.sv
+│   │   ├── Input_Stream_Buffer.sv
+│   │   ├── Output_Collector.sv
+│   │   └── Dataflow_Scheduler.sv
+│   │
+│   ├── MAC_Array_Engine/
+│   │   ├── MAC_Array_Controller.sv
+│   │   ├── MAC_PE_Array.sv
+│   │   │   ├── Processing_Element/
+|   |   |   |   ├── PE.sv
+│   │   │   │   ├── Multiplier.sv
+│   │   │   │   ├── Adder.sv
+│   │   │   │   └── Local_Reg.sv
+│   │   ├── Input_Distributor.sv
+│   │   ├── Output_Accumulator.sv
+│   │   └── Dataflow_Controller.sv
+│   │
+│   ├── Vector_Units/
+│   │   ├── Elementwise_Adder.sv
+│   │   ├── Elementwise_Multiplier.sv
+│   │   └── Normalization_Unit.sv
+│   │
+│   ├── Activation_Unit/
+│   │   ├── ReLU.sv
+│   │   ├── Sigmoid/Tanh.sv (LUT or CORDIC)
+│   │   ├── Softmax_Unit.sv
+│   │   └── Custom_Activation.sv (extensible)
+│   │
+│   ├── Pooling_Unit/
+│   │   ├── Max_Pooling.sv
+│   │   ├── Avg_Pooling.sv
+│   │   └── Global_Pooling.sv
+│   │
+│   └── Quantization_Unit/
+│       ├── FP16_to_INT8.sv
+│       ├── INT8_to_FP16.sv
+│       └── Dynamic_Scaler.sv
+│
+├── Memory_Subsystem/
+│   ├── Weight_Buffer.sv (SRAM Banks)
+│   ├── Activation_Buffer.sv (SRAM Banks)
+│   ├── DMA_Engine/
+│   │   ├── AXI_Master.sv
+│   │   ├── Read_Channel.sv
+│   │   └── Write_Channel.sv
+│   ├── Address_Generators/
+│   │   ├── Stride_Handler.sv
+│   │   ├── Offset_Calculator.sv
+│   │   └── Burst_Controller.sv
+│   └── Prefetch_Writeback.sv
+│
+├── Control_Unit
+│   ├── Instruction_Decoder.sv
+│   ├── Scheduler/
+│   │   ├── Engine_Selector.sv (MAC vs Systolic)
+│   │   ├── Job_Dispatcher.sv
+│   │   └── Dependency_Checker.sv
+│   └── Error_Handler.sv
+│
+├── Interfaces
+│   ├── AXI_Master_IF.sv   (for DRAM access)
+│   ├── AXI-Lite/APB_IF.sv (CPU control)
+│   └── Cache_Coherency_IF.sv (optional)
+│
+└── Debug_Unit
+    ├── Performance_Counters.sv
+    ├── Trace_Buffers.sv
+    └── JTAG/Scan_Chain.sv
+
+
+    see architecture idea 3 for more details.
