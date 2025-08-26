@@ -7,7 +7,7 @@
 | 21-08-2025 |          |         |        |
 | 22-08-2025 |          |         |        |
 | 25-08-2025 |          |         |        |
-| 26-08-2025 |          |         |        |
+| 26-08-2025 | added issue templates and pull request templates, also added development flow, requirements, contributing, and license file           |         |        |
 | 27-08-2025 |          |         |        |
 | 28-08-2025 |          |         |        |
 | 29-08-2025 |          |         |        |
