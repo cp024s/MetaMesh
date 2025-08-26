@@ -1,0 +1,55 @@
+# ------------------------
+# HDL Simulation & Verification
+# ------------------------
+iverilog==11.0             # Verilog-2005 simulator
+verilator==5.026           # Fast SV RTL simulation, lint, coverage
+cocotb==1.9.2              # Python-based testbench framework
+cocotb-test==0.2.2         # Pytest integration for cocotb
+gtkwave==3.3.120           # Waveform viewer
+slang==3.0                 # SystemVerilog parser (alternative to Surelog)
+
+# ------------------------
+# Synthesis & Netlist Generation
+# ------------------------
+yosys==0.40                # Logic synthesis for Verilog/SystemVerilog (w/ sv2v)
+sv2v==0.0.12               # SystemVerilog → Verilog conversion for Yosys
+
+# ------------------------
+# PnR & Timing Analysis
+# ------------------------
+openroad==2.0              # Full RTL-to-GDSII flow (PnR, STA)
+openlane==2024.12          # Preconfigured RTL-to-GDS flow wrapper
+magic==8.3.489             # Layout editing & DRC
+netgen==1.5.275            # LVS (Layout vs. Schematic)
+
+# ------------------------
+# SystemVerilog Frontend (for synthesis + simulation)
+# ------------------------
+surelog==1.45              # SystemVerilog parser frontend
+uhdm==1.45                 # UHDM IR format for SV → Yosys/OpenROAD
+
+# ------------------------
+# DFT & Formal Verification
+# ------------------------
+fault==1.0.0               # DFT (scan-chain insertion, ATPG)
+yosys-smtbmc==0.40         # Formal verification backend (SMT solvers)
+symbiyosys==1.0.0          # Formal verification flow wrapper
+boolector==3.2.3           # SMT solver for formal (Yosys backend)
+z3-solver==4.12.5.0        # Alternative SMT solver for formal
+
+# ------------------------
+# Utilities & Infrastructure
+# ------------------------
+python==3.11               # Python runtime (for cocotb, scripts)
+pytest==8.0.2              # Test automation framework
+numpy==1.26.4              # Vector/matrix handling in TB + golden models
+scipy==1.12.0              # Reference math functions (softmax, conv, etc.)
+matplotlib==3.9.0          # Plotting debug/test results
+pandas==2.2.2              # Logging & test results tracking
+
+# ------------------------
+# Optional / Debugging
+# ------------------------
+jupyter==1.0.0             # Interactive notebooks for debug
+pyverilog==1.3.0           # Verilog parser + analysis in Python
+hdlparse==1.0.0            # Extract module ports & docs
