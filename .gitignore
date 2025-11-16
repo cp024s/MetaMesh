@@ -111,7 +111,7 @@ INCA_libs/
 # Cadence Genus/Innovus
 *.log
 *.cmd
-*.txt
+#*.txt
 *.err
 *.out
 *.svf
