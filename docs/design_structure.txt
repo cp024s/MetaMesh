@@ -1,0 +1,59 @@
+NPU_TOP.sv
+├── Host_Interface/
+│   ├── Regfile_Access.sv        # AXI-Lite/APB slave (control + status)
+│   ├── Interrupt_Controller.sv
+│   └── Job_Queue.sv             # descriptor FIFO, doorbell handling
+│
+├── Control_Unit/
+│   ├── MicroOp_Engine.sv        # micro-op ROM/RAM, decoder, event unit
+│   ├── Tile_Scheduler.sv        # tile gen, resource alloc, prefetch hints
+│   └── Dispatcher.sv            # engine selector + job dispatcher
+│
+├── Compute_Engine/
+│   ├── Compute_Fabric_Controller.sv   # global control for PE array & dataflows
+│   ├── PE_Array.sv                    # parametrized array instantiation
+│   ├── PE/                             # single PE implementation
+│   │   ├── PE.sv
+│   │   ├── MAC_Core.sv                 # multiplier + add pipeline
+│   │   ├── ALU.sv                      # elementwise ops (add,mul,max)
+│   │   ├── ACT_Unit.sv                 # activation (ReLU, clamp, LUT)
+│   │   └── Local_RF.sv                 # small operand / accumulator RF
+│   ├── InterPE_Link.sv                 # streaming links (row/col), flow ctrl
+│   ├── Broadcast_Unit.sv               # weight/activation broadcast & multicast
+│   └── Reduction_Unit.sv               # pipelined tree / streaming reduce
+│
+├── Compute_Modes/                      # mode support & helpers
+│   ├── Systolic_Mode.sv                # configs & micro-op helpers for systolic
+│   ├── SIMD_Mode.sv                    # configs & micro-op helpers for SIMD/MAC
+│   └── MixedPrecision_Manager.sv       # precision config, scale factors
+│
+├── Memory_Subsystem/
+│   ├── SRAM_Bank_Controller.sv
+│   ├── Activation_Buffer.sv
+│   ├── Weight_Buffer.sv
+│   ├── Accumulator_Buffer.sv
+│   ├── Prefetch_Writeback.sv
+│   └── Bank_Monitor.sv                 # bank conflicts, almost-full signals
+│
+├── DMA_Subsystem/
+│   ├── DMA_Controller.sv               # multi-channel, SG, prefetch thr
+│   ├── Addr_Generator.sv               # nested-loop addr gen
+│   ├── AXI_Master_IF.sv
+│   └── DMA_Arbiter.sv
+│
+├── Interconnect/
+│   ├── Crossbar.sv                      # fabric-level crossbar (if needed)
+│   └── Arbiter.sv
+│
+├── PMU_and_Clocks/
+│   ├── Clock_Gating.sv
+│   └── PowerState_Manager.sv
+│
+├── Debug_and_Perf/
+│   ├── Perf_Counters.sv
+│   ├── Trace_Buffer.sv
+│   └── Error_Logger.sv
+│
+└── DFT_and_Test/
+    ├── BIST_SRAM.sv
+    └── Scan_Points.sv
