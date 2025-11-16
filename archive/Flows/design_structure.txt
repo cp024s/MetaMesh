@@ -1,0 +1,79 @@
+rtl/
+├─ common/                         # shared packages, macros, utilities
+│  ├─ npu_pkg.sv
+│  ├─ types.sv
+│  ├─ params.svh
+│  └─ utils.sv
+│
+├─ ip/                             # third-party / vendor IP wrappers (AXI, DMA, etc.)
+│  ├─ axi/
+│  │  ├─ axi_iface.sv
+│  │  └─ axi_lite_sif.sv
+│  └─ vendor_dma/                   # optional vendor DMA wrapper
+│     └─ axi_dma_wrap.sv
+│
+├─ dma/                            # DMA subsystem (address generation, AXI master)
+│  ├─ dma_controller.sv
+│  ├─ addr_generator.sv
+│  ├─ dma_read_channel.sv
+│  ├─ dma_write_channel.sv
+│  └─ dma_arbiter.sv
+│
+├─ mem/                            # on-chip banked SRAM & buffer controllers
+│  ├─ sram_bank_ctrl.sv
+│  ├─ activation_buffer.sv
+│  ├─ weight_buffer.sv
+│  ├─ accum_buffer.sv
+│  ├─ bank_monitor.sv
+│  └─ prefetch_writeback.sv
+│
+├─ compute/                        # compute fabrics (unified) and helpers
+│  ├─ compute_fabric_ctrl.sv       # top-level compute controller
+│  ├─ compute_modes/                # mode helpers & adapters
+│  │  ├─ systolic_mode.sv
+│  │  ├─ mac_simd_mode.sv
+│  │  └─ mixed_precision_mgr.sv
+│  ├─ pe/                           # Processing Element and subcomponents
+│  │  ├─ pe.sv
+│  │  ├─ mac_core.sv
+│  │  ├─ alu.sv
+│  │  ├─ act_unit.sv
+│  │  └─ local_rf.sv
+│  ├─ pe_array.sv                   # parameterized array instantiation
+│  ├─ interpe_link.sv               # neighbor links (row/col streaming)
+│  ├─ broadcast_unit.sv             # multicast/broadcast helpers
+│  └─ reduction_unit.sv             # pipelined reduction & partial-sum management
+│
+├─ engines/                         # high-level engine wrappers (systolic & MAC)
+│  ├─ unified_engine.sv             # top wrapper that multiplexes engines
+│  ├─ systolic_engine/              # systolic-specific orchestration
+│  │  ├─ systolic_ctrl.sv
+│  │  └─ systolic_wavefront_fsm.sv
+│  └─ mac_engine/                   # MAC/SIMD-specific orchestration
+│     ├─ mac_ctrl.sv
+│     └─ mac_lane_scheduler.sv
+│
+├─ control/                         # scheduling, microcode, job handling
+│  ├─ microop_engine.sv
+│  ├─ tile_scheduler.sv
+│  ├─ dispatcher.sv                 # selects engine/mode, issues start/stop
+│  └─ job_queue.sv
+│
+├─ host_if/                         # AXI-lite/APB registers, interrupts
+│  ├─ axi_lite_slave.sv
+│  ├─ regfile.sv
+│  └─ interrupt_controller.sv
+│
+├─ top/                             # top-level integration wrapper and top params
+│  ├─ npu_top.sv
+│  └─ top_params.svh
+│
+├─ debug/                           # perf counters, trace, error logging
+│  ├─ perf_counters.sv
+│  ├─ trace_buffer.sv
+│  └─ error_logger.sv
+│
+└─ tb/                              # simple smoke test benches (for RTL dev)
+   ├─ tb_pe_unit.sv
+   ├─ tb_pe_array.sv
+   └─ tb_one_tile_conv.sv
