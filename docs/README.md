@@ -9,9 +9,10 @@ This document describes the architecture, core components, interactions, workflo
 
 At its core the design is a pipelined, VLIW-like NPU overlay optimized for memory-bound deep-learning primitives (matrix-vector, inner-product and vector elementwise ops). The NPU is organized as one or more **Cores**, each core containing a programmable pipeline of five major stages:
 
-<p align="center">
-  <img src="/docs/assets/npu_block_diagram.png" width=750 alt="NPU Block diagram">
-</p>
+<figure align="center">
+  <img src="/docs/assets/npu_block_diagram.png" width="750" alt="High-level engineering block diagram of NPU">
+  <figcaption><em> High-level NPU architecture: Host, control plane, MVU/MFUs, memory subsystem and interconnect </em></figcaption>
+</figure>
 
 
 1. **Loader (LD)** — IO, scratchpad DMA and writeback; handles instruction-driven read/write of architecture state.
@@ -25,6 +26,12 @@ The pipeline is highly parallel (T tiles × D DPEs × L lanes) and exposes progr
 ---
 
 ## Core compute datapath — inner-product unit (MAA / adder-tree)
+
+<figure align="center">
+  <img src="/docs\assets\inner_product_engine-product_tree.png" width="600" alt="Adder-tree inner-product unit showing multipliers, reduction tree, outputs and control/tag logic">
+  <figcaption><em> Inner-Product Engine with adder-tree and control/tag logic </em></figcaption>
+</figure>
+
 
 ### Rationale and topology
 
@@ -48,6 +55,11 @@ The pipeline is highly parallel (T tiles × D DPEs × L lanes) and exposes progr
 ---
 
 ## Sparsity engine & zero-skipping
+<figure align="center">
+  <img src="/docs\assets\Sparsity_engine_2.png" width="600" alt="Adder-tree inner-product unit showing multipliers, reduction tree, outputs and control/tag logic">
+  <figcaption><em> Inner-Product Engine with adder-tree and control/tag logic </em></figcaption>
+</figure>
+
 
 ### Goal
 
