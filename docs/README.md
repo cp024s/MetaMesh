@@ -9,7 +9,10 @@ This document describes the architecture, core components, interactions, workflo
 
 At its core the design is a pipelined, VLIW-like NPU overlay optimized for memory-bound deep-learning primitives (matrix-vector, inner-product and vector elementwise ops). The NPU is organized as one or more **Cores**, each core containing a programmable pipeline of five major stages:
 
-<img src="/docs/assets/npu_block_diagram.png" width="700px">
+<p align="center">
+  <img src="/docs/assets/npu_block_diagram.png" width=750 alt="NPU Block diagram">
+</p>
+
 
 1. **Loader (LD)** — IO, scratchpad DMA and writeback; handles instruction-driven read/write of architecture state.
 2. **Matrix-Vector Unit (MVU)** — massively parallel dot-product engines (DPEs) organized into tiles; the MVU performs the heavy inner-product work.
