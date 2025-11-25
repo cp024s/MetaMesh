@@ -1,85 +1,103 @@
-NPU_TOP.sv
-├── Host_Interface/
-│   ├── AXI/APB_Slave.sv      (Config + Status Registers)
-│   ├── Interrupt_Controller.sv
-│   └── Job_Queue.sv
+rtl/
+├─ common/                         # shared packages, macros, utilities (lowest-level)
+│  ├─ npu_pkg.sv                    # global params, typedefs, enums
+│  ├─ types.sv                      # typedefs & interfaces (axi_stream_if, bus_if)
+│  ├─ params.svh                    # top-level parameter set (TILES, DPE, LANES)
+│  └─ utils.sv                      # misc helpers: saturation, clamp, ops
 │
-├── Compute_Engine/
-│   ├── Systolic_Array_Engine/
-│   │   ├── Systolic_Array_Controller.sv (wavefront FSM)
-│   │   ├── Systolic_PE_Array.sv
-│   │   │   ├── Processing_Element (PE)/
-|   |   |   |   ├── PE.sv
-│   │   │   │   ├── Multiplier.sv
-│   │   │   │   ├── Adder.sv
-│   │   │   │   └── Local_Reg/Buffer.sv
-│   │   ├── Input_Stream_Buffer.sv
-│   │   ├── Output_Collector.sv
-│   │   └── Dataflow_Scheduler.sv
-│   │
-│   ├── MAC_Array_Engine/
-│   │   ├── MAC_Array_Controller.sv
-│   │   ├── MAC_PE_Array.sv
-│   │   │   ├── Processing_Element/
-|   |   |   |   ├── PE.sv
-│   │   │   │   ├── Multiplier.sv
-│   │   │   │   ├── Adder.sv
-│   │   │   │   └── Local_Reg.sv
-│   │   ├── Input_Distributor.sv
-│   │   ├── Output_Accumulator.sv
-│   │   └── Dataflow_Controller.sv
-│   │
-│   ├── Vector_Units/
-│   │   ├── Elementwise_Adder.sv
-│   │   ├── Elementwise_Multiplier.sv
-│   │   └── Normalization_Unit.sv
-│   │
-│   ├── Activation_Unit/
-│   │   ├── ReLU.sv
-│   │   ├── Sigmoid/Tanh.sv (LUT or CORDIC)
-│   │   ├── Softmax_Unit.sv
-│   │   └── Custom_Activation.sv (extensible)
-│   │
-│   ├── Pooling_Unit/
-│   │   ├── Max_Pooling.sv
-│   │   ├── Avg_Pooling.sv
-│   │   └── Global_Pooling.sv
-│   │
-│   └── Quantization_Unit/
-│       ├── FP16_to_INT8.sv
-│       ├── INT8_to_FP16.sv
-│       └── Dynamic_Scaler.sv
+├─ top/                             # top-level integration & platform glue
+│  ├─ top_params.svh
+│  ├─ npu_top.sv
+│  ├─ clk_rst_ctrl.sv
+│  └─ platform_adapters.sv          # PCIe/Ethernet/FPGA adapter stubs if needed
 │
-├── Memory_Subsystem/
-│   ├── Weight_Buffer.sv (SRAM Banks)
-│   ├── Activation_Buffer.sv (SRAM Banks)
-│   ├── DMA_Engine/
-│   │   ├── AXI_Master.sv
-│   │   ├── Read_Channel.sv
-│   │   └── Write_Channel.sv
-│   ├── Address_Generators/
-│   │   ├── Stride_Handler.sv
-│   │   ├── Offset_Calculator.sv
-│   │   └── Burst_Controller.sv
-│   └── Prefetch_Writeback.sv
+├─ host_if/                         # host-facing control plane (maps to Host Interface box)
+│  ├─ axi_lite_slave.sv             # register map, control/status
+│  ├─ regfile.sv
+│  ├─ interrupt_controller.sv
+│  └─ job_queue.sv                   # high-level job queue / request arbiter
 │
-├── Control_Unit
-│   ├── Instruction_Decoder.sv
-│   ├── Scheduler/
-│   │   ├── Engine_Selector.sv (MAC vs Systolic)
-│   │   ├── Job_Dispatcher.sv
-│   │   └── Dependency_Checker.sv
-│   └── Error_Handler.sv
+├─ control/                         # VLIW / micro-op decode, scheduling (maps to Control Unit)
+│  ├─ instr_fetch.sv
+│  ├─ decoder_vliw.sv
+│  ├─ microop_engine.sv
+│  ├─ tile_scheduler.sv
+│  ├─ dispatcher.sv
+│  └─ tag_table.sv
 │
-├── Interfaces
-│   ├── AXI_Master_IF.sv   (for DRAM access)
-│   ├── AXI-Lite/APB_IF.sv (CPU control)
-│   └── Cache_Coherency_IF.sv (optional)
+├─ dma/                             # DMA & loader (maps to Loader / DMA blocks)
+│  ├─ dma_controller.sv
+│  ├─ addr_generator.sv
+│  ├─ dma_read_channel.sv
+│  ├─ dma_write_channel.sv
+│  └─ dma_arbiter.sv
 │
-└── Debug_Unit
-    ├── Performance_Counters.sv
-    ├── Trace_Buffers.sv
-    └── JTAG/Scan_Chain.sv
-
-
-    see architecture idea 3 for more details.
+├─ mem/                             # on-chip multi-bank scratchpad (maps to Memory Subsystem)
+│  ├─ bram_if/                       # BRAM wrappers & multi-ported bank controllers
+│  │  ├─ bram_bank_ctrl.sv
+│  │  ├─ bram_sync_fifo.sv
+│  │  └─ bram_bist.sv
+│  ├─ activation_buffer.sv           # IFM banks + bank allocator
+│  ├─ weight_buffer.sv               # persistent weight banks (MRF)
+│  ├─ accum_buffer.sv                # PSUM banks / BRAM accumulators
+│  ├─ bank_arbiter.sv                # dynamic port assignment policy
+│  └─ prefetch_writeback.sv
+│
+├─ compute/                         # compute fabric orchestration (maps to core_array + engines)
+│  ├─ compute_fabric_ctrl.sv         # top controller that selects engine modes
+│  ├─ compute_modes/
+│  │  ├─ systolic_mode.sv
+│  │  ├─ mac_simd_mode.sv
+│  │  └─ mixed_precision_mgr.sv
+│  ├─ pe_array.sv                    # parameterized tile / array instantiation
+│  ├─ interpe_link.sv
+│  ├─ broadcast_unit.sv
+│  └─ reduction_unit.sv
+│
+├─ pe/                              # processing element primitives (maps to PE folder in diagrams)
+│  ├─ pe.sv
+│  ├─ mac_core.sv
+│  ├─ multiplier.sv
+│  ├─ adder_tree.sv
+│  ├─ local_rf.sv
+│  └─ alu.sv
+│
+├─ engines/                         # high-level engine wrappers (Systolic, MAC) — README Figures 2/3
+│  ├─ unified_engine.sv              # top-level engine broker (selects systolic / mac)
+│  ├─ systolic_engine/
+│  │  ├─ systolic_ctrl.sv
+│  │  ├─ systolic_wavefront_fsm.sv
+│  │  └─ systolic_pe_array.sv
+│  └─ mac_engine/
+│     ├─ mac_ctrl.sv
+│     ├─ mac_lane_scheduler.sv
+│     └─ mac_array_top.sv
+│
+├─ mfus/                            # multi-function units (activations, elementwise) - README Fig. MFUs
+│  ├─ activation_unit.sv
+│  ├─ elementwise_unit.sv
+│  ├─ quantize_dequant.sv
+│  └─ normalization_unit.sv
+│
+├─ sparsity/                        # sparsity engine / zero-skipping (maps to Fig. 5)
+│  ├─ bitmask_generator.sv
+│  ├─ packer_unit.sv
+│  ├─ interlane_priority_encoder.sv
+│  ├─ lane_arbiter.sv
+│  └─ sparsity_if.sv                 # ready/valid interface & control hooks to MVU
+│
+├─ interconnect/                    # on-chip fabric / crossbars / AXI stream switches (NoC adapters)
+│  ├─ axi_stream_switch.sv
+│  ├─ axi4_adapter.sv
+│  └─ flitizer_adapter.sv            # optional: packetize for RAD mapping
+│
+├─ debug/                           # perf counters, trace, error logging (README Fig. Debug)
+│  ├─ perf_counters.sv
+│  ├─ trace_buffer.sv
+│  └─ error_logger.sv
+│
+└─ tb/                              # lightweight tests / smoke benches
+   ├─ tb_pe_unit.sv
+   ├─ tb_pe_array.sv
+   ├─ tb_sparsity.sv
+   └─ tb_one_tile_conv.sv
