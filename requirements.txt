@@ -53,3 +53,9 @@ pandas==2.2.2              # Logging & test results tracking
 jupyter==1.0.0             # Interactive notebooks for debug
 pyverilog==1.3.0           # Verilog parser + analysis in Python
 hdlparse==1.0.0            # Extract module ports & docs
+
+# ------------------------
+# ReadtheDocs dependencies
+# -----------------------
+sphinx==7.2.6              # Documentation generator
+sphinx-rtd-theme==1.2.2    # ReadtheDocs theme for Sphinx
